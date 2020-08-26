@@ -1,0 +1,28 @@
+name: db
+description: runs test database
+inputs:
+  appDir:
+    dir:
+      description: Application root direactory
+      default: .
+  dbPassword:
+    string:
+      description: password to connect to the database
+      isSecret: true
+      default: password
+  dbSchema:
+    string:
+      description: name of the db schema
+      default: someDB
+  dbUsername:
+    string:
+      description: name of the db user
+      default: user123
+run:
+  serial:
+    - op:
+        ref: ../db/init
+        inputs: { appDir }
+    - op:
+        ref: github.com/opspec-pkgs/mysql.db.run#1.0.1
+        inputs: { dbDataRootDir: $(appDir/data), dbPassword: $(dbPassword), dbSchema: $(dbSchema), dbUsername: $(dbUsername), dbUseNativePassword: true }
